@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Test.Models.Week>
+<table class="reportTable">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Monday)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaxUsers)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td >
+                @Html.DisplayFor(modelItem => item.Monday)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxUsers)
+            </td>
+        </tr>
+    }
+</table>
