@@ -184,10 +184,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\TestDatabase.mdf" />
-    <Content Include="App_Data\TestDatabase_log.ldf">
-      <DependentUpon>TestDatabase.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -341,6 +337,7 @@
     <Content Include="Views\Menu\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>

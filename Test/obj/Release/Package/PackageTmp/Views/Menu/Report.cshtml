@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Report";
+}
+@using (Ajax.BeginForm("ReportOfMonth", "Menu",null, new AjaxOptions {UpdateTargetId = "report", HttpMethod = "Post"}, new { enctype = "multipart/form-data"}))
+{
+   <input type="text" name="date" class="date-picker" />
+   <input type="submit" class="btn btn-outline-info" value="Get report" />
+}
+<div id="report"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'mm/yy',
+            onClose: function (dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
+    });
+</script>
+

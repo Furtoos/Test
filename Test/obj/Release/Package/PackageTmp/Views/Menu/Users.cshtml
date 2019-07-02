@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+}
+<div class="row">
+    <div class="col-md-8">
+        <table id="listOfUser"></table>
+        <div id="jpager"></div>
+    </div>
+    <div class="col-md-8">
+        <table id="movements"></table>
+        <div id="jpager2"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+         $("#movements").jqGrid({
+        url: '@Url.Action("GetMovements","User")',
+        contentType: "application/json",
+        datatype: "json",
+        loadonce: false,
+        colNames: ['Id','Date time', 'User name', 'Changed'],
+        colModel: [
+            { key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
+            { name: 'Date', index: 'Date', width: 120, edittype: 'text', sortable: true, editrules: { date: true } },
+            { name: 'UserName', index: 'UserName', width: 75, edittype: 'text'},
+            { name: 'Change', index: 'Change', width: 500, edittype: "textarea", editoptions: { row : 15 } },
+        ],
+        rowNum: 12,
+        width: 950,
+        pager: '#jpager2',
+        loadui: 'disable',
+        sortname: 'Date',
+        sortorder: "desc",
+        caption: "List of movements",
+        jsonReader: {
+            repeatitems: false,
+            root: function (obj) { return obj; },
+            page: function (obj) { return 1; },
+            total: function (obj) { return 1; },
+            records: function (obj) { return obj.length; }
+        },
+        });
+    });
+    $(document).ready(function () {
+      $("#listOfUser").jqGrid({
+        url: '@Url.Action("GetUsers","User")',
+        contentType: "application/json",
+        datatype: "json",
+        loadonce: true,
+        colNames: ['Id','User name', 'First name', 'Last name','Password'],
+        colModel: [
+            { key: true, hidden: true, name: 'Id', index: 'Id' },
+            { name: 'UserName', index: 'UserName', width: 150, editable: true, edittype: 'text', editrules: { required: true }, sortable: true},
+            { name: 'firstName', index: 'firstName', width: 150, editable: true, edittype: 'text', editrules: { required: true }, sortable: true },
+            { name: 'lastName', index: 'lastName', width: 150, editable: true, edittype: 'text', editrules: { required: true }, sortable: true },
+            { name: 'Password', index: 'Password', width: 150, editable: true, edittype: 'password', editrules: {required: true }, sortable: true },
+        ],
+        rowNum: 12,
+        rowList: [10, 20, 30],
+        width: 950,
+        pager: '#jpager',
+        loadui: 'disable',
+        sortname: 'UserName',
+        sortorder: "desc",
+        caption: "List of users",
+        jsonReader: {
+            repeatitems: false,
+            root: function (obj) { return obj; },
+            page: function (obj) { return 1; },
+            total: function (obj) { return 1; },
+            records: function (obj) { return obj.length; }
+        },
+    });
+    $("#listOfUser").jqGrid('navGrid', '#jpager', {
+
+        refresh: false,
+        add: true, // добавление
+        del: true, // удаление
+        edit: true, // редактирование
+        view: true, // просмотр записи
+        viewtext: "Watch",
+        viewtitle: "Selected record",
+        addtext: "Add",
+        edittext: "Edit",
+        deltext: "Delete"
+    },
+        update("edit"), // обновление
+        update("add"), // добавление
+        update("del") // удаление
+    );
+    function update(act) {
+        return {
+            closeAfterAdd: true, // закрыть после добавления
+            height: 250,
+            width: 400,
+            closeAfterEdit: true, // закрыть после редактирования
+            reloadAfterSubmit: true, // обновление
+            drag: true,
+            onclickSubmit: function (params) {
+                var list = $("#listOfUser");
+                var selectedRow = list.getGridParam("selrow");
+                rowData = list.getRowData(selectedRow);
+                if (act === "add")
+                    params.url = '@Url.Action("Create","User")';
+                else if (act === "del")
+                    params.url = '@Url.Action("Delete","User")';
+                else if (act === "edit")
+                    params.url = '@Url.Action("Edit","User")';
+            },
+            afterSubmit: function (response, postdata) {
+                // обновление грида
+                $(this).jqGrid('setGridParam', { datatype: 'json' }).trigger('reloadGrid')
+                return [true, "", 0]
+            }
+        };
+    };
+    });
+    function foo() {
+        $('#listOfUser').jqGrid('setGridParam', { datatype: 'json' }).trigger('reloadGrid', [{ current: true }])
+        $('#movements').jqGrid('setGridParam', { datatype: 'json' }).trigger('reloadGrid')
+        setTimeout(foo, 2000);
+    }
+    $(document).ready(function () {
+        foo();
+    });
+</script>
